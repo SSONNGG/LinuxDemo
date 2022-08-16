@@ -22,7 +22,7 @@ public:
 	WebServer();
 	~WebServer();
 
-	void init(int port,)
+	void init();
 
 };
 
