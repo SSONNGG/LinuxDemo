@@ -1,8 +1,7 @@
-﻿#include "iostream"
+﻿#include "config.h"
 
-using namespace std;
 int main()
 {
-    cout << "hello" << endl;
-    return 0;
+    //数据库信息
+    
 }

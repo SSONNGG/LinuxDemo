@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="HTTP_Conn.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="threadpool">
+      <UniqueIdentifier>{0caddd17-3634-4393-805e-449658025534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="http">
+      <UniqueIdentifier>{e55be96c-8130-419a-8cc3-adf8a453c2b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lock">
+      <UniqueIdentifier>{54045816-a0b8-43c1-89b9-6e29255a00d3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HTTP_Conn.h" />
+    <ClInclude Include="locker.h">
+      <Filter>lock</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
