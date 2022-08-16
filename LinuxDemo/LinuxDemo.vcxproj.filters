@@ -3,6 +3,12 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="HTTP_Conn.cpp" />
+    <ClCompile Include="config.cpp" />
+    <ClCompile Include="webserver.cpp" />
+    <ClCompile Include="SQL_Conn_Pool.cpp" />
+    <ClCompile Include="block_queue.cpp">
+      <Filter>log</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="threadpool">
@@ -14,11 +20,20 @@
     <Filter Include="lock">
       <UniqueIdentifier>{54045816-a0b8-43c1-89b9-6e29255a00d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="database">
+      <UniqueIdentifier>{59d4f298-5342-4928-8faa-34e322b14944}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="log">
+      <UniqueIdentifier>{512f4a82-50b3-4e15-9cea-c817a7a704b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HTTP_Conn.h" />
     <ClInclude Include="locker.h">
       <Filter>lock</Filter>
     </ClInclude>
+    <ClInclude Include="config.h" />
+    <ClInclude Include="webserver.h" />
+    <ClInclude Include="SQL_Conn_Pool.h" />
   </ItemGroup>
 </Project>
