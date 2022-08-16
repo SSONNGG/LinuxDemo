@@ -5,6 +5,7 @@
 #include<pthread.h>
 #include<semaphore.h>
 
+//确保任一时刻只能有一个线程能进入关键代码段
 //定义信号量sem
 class sem{
 private:
