@@ -22,12 +22,14 @@ private:
 	int m_front;	//front标记
 	int m_back;		//back标记
 public:
+	//初始化成员
 	block_queue(int max_size = 1000)
 	{
 		if (max_size <= 0)
 		{
 			exit(-1);
 		}
+		//使用构造函数创建循环数组
 		m_max_size = max_size;
 		m_array = new T[max_size];
 		m_size = 0;
@@ -109,7 +111,7 @@ public:
 		return true;
 	}
 
-	//获取队列大小
+	//获取队列当前长度
 	int size()
 	{
 		int temp = 0;
@@ -119,7 +121,7 @@ public:
 		return temp;
 	}
 
-	//获取队列最大值
+	//获取队列最大长度
 	int max_size()
 	{
 		int temp = 0;
@@ -140,6 +142,7 @@ public:
 			m_mutex.unlock();
 			return false;
 		}
+		//将新增数据放在循环数组的对应位置
 		m_back = (m_back + 1) % m_max_size;
 		m_array[m_back] = item;
 		m_size++;
@@ -153,14 +156,17 @@ public:
 	bool pop(T& item)
 	{
 		m_mutex.lock();
+		//当有多个消费者时，需要使用while循环而非if
 		while (m_size<=0)
 		{
+			//当重新抢到互斥锁时，m_cond.wait()返回true，跳出while循环执行
 			if (!m_cond.wait(m_mutex.get()))
 			{
 				m_mutex.unlock();
 				return false;
 			}
 		}
+		//取出队首的元素。
 		m_front=(m_front+1)%m_max_size;
 		item=m_array[m_front];
 		m_size--;
@@ -168,7 +174,7 @@ public:
 		return true;
 	}
 
-	//弹出元素时增加超时处理
+	//弹出元素时增加超时处理，在timewait()基础上增加了等待的时间，只要在指定的时间内抢到互斥锁即可。
 	bool pop(T& item, int ms_timeout)
 	{
 		struct timespec t = { 0,0 };
