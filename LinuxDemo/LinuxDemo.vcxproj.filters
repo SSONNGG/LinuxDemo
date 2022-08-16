@@ -36,4 +36,7 @@
     <ClInclude Include="webserver.h" />
     <ClInclude Include="SQL_Conn_Pool.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ServerDB.sql" />
+  </ItemGroup>
 </Project>

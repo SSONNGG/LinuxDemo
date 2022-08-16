@@ -92,6 +92,9 @@
     <ClInclude Include="SQL_Conn_Pool.h" />
     <ClInclude Include="webserver.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ServerDB.sql" />
+  </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
