@@ -78,9 +78,10 @@
     <IncludePath>$(VC_IncludePath);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="block_queue.cpp" />
+    <ClCompile Include="block_queue.h" />
     <ClCompile Include="config.cpp" />
     <ClCompile Include="HTTP_Conn.cpp" />
+    <ClCompile Include="log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SQL_Conn_Pool.cpp" />
     <ClCompile Include="webserver.cpp" />
@@ -89,6 +90,7 @@
     <ClInclude Include="config.h" />
     <ClInclude Include="HTTP_Conn.h" />
     <ClInclude Include="locker.h" />
+    <ClInclude Include="log.h" />
     <ClInclude Include="SQL_Conn_Pool.h" />
     <ClInclude Include="webserver.h" />
   </ItemGroup>

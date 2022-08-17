@@ -6,7 +6,10 @@
     <ClCompile Include="config.cpp" />
     <ClCompile Include="webserver.cpp" />
     <ClCompile Include="SQL_Conn_Pool.cpp" />
-    <ClCompile Include="block_queue.cpp">
+    <ClCompile Include="block_queue.h">
+      <Filter>log</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
       <Filter>log</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,6 +38,9 @@
     <ClInclude Include="config.h" />
     <ClInclude Include="webserver.h" />
     <ClInclude Include="SQL_Conn_Pool.h" />
+    <ClInclude Include="log.h">
+      <Filter>log</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ServerDB.sql" />
