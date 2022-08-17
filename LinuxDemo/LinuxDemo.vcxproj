@@ -84,6 +84,7 @@
     <ClCompile Include="log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SQL_Conn_Pool.cpp" />
+    <ClCompile Include="Thread_Pool.cpp" />
     <ClCompile Include="webserver.cpp" />
   </ItemGroup>
   <ItemGroup>

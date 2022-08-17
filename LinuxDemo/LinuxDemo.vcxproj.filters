@@ -2,15 +2,24 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="HTTP_Conn.cpp" />
     <ClCompile Include="config.cpp" />
-    <ClCompile Include="webserver.cpp" />
-    <ClCompile Include="SQL_Conn_Pool.cpp" />
     <ClCompile Include="block_queue.h">
       <Filter>log</Filter>
     </ClCompile>
     <ClCompile Include="log.cpp">
       <Filter>log</Filter>
+    </ClCompile>
+    <ClCompile Include="webserver.cpp">
+      <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="HTTP_Conn.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="SQL_Conn_Pool.cpp">
+      <Filter>database</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread_Pool.cpp">
+      <Filter>threadpool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -29,20 +38,31 @@
     <Filter Include="log">
       <UniqueIdentifier>{512f4a82-50b3-4e15-9cea-c817a7a704b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="server">
+      <UniqueIdentifier>{6121c04b-6e83-42b1-ae43-e11803a59990}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HTTP_Conn.h" />
     <ClInclude Include="locker.h">
       <Filter>lock</Filter>
     </ClInclude>
     <ClInclude Include="config.h" />
-    <ClInclude Include="webserver.h" />
-    <ClInclude Include="SQL_Conn_Pool.h" />
     <ClInclude Include="log.h">
       <Filter>log</Filter>
     </ClInclude>
+    <ClInclude Include="HTTP_Conn.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="webserver.h">
+      <Filter>server</Filter>
+    </ClInclude>
+    <ClInclude Include="SQL_Conn_Pool.h">
+      <Filter>database</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ServerDB.sql" />
+    <None Include="ServerDB.sql">
+      <Filter>database</Filter>
+    </None>
   </ItemGroup>
 </Project>
