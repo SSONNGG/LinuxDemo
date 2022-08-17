@@ -15,7 +15,7 @@
     <ClCompile Include="HTTP_Conn.cpp">
       <Filter>http</Filter>
     </ClCompile>
-    <ClCompile Include="SQL_Conn_Pool.cpp">
+    <ClCompile Include="SQL_connectionPool.cpp">
       <Filter>database</Filter>
     </ClCompile>
     <ClCompile Include="Thread_Pool.cpp">
@@ -56,7 +56,7 @@
     <ClInclude Include="webserver.h">
       <Filter>server</Filter>
     </ClInclude>
-    <ClInclude Include="SQL_Conn_Pool.h">
+    <ClInclude Include="SQL_connectionPool.h">
       <Filter>database</Filter>
     </ClInclude>
   </ItemGroup>

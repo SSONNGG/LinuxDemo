@@ -83,7 +83,7 @@
     <ClCompile Include="HTTP_Conn.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="SQL_Conn_Pool.cpp" />
+    <ClCompile Include="SQL_connectionPool.cpp" />
     <ClCompile Include="Thread_Pool.cpp" />
     <ClCompile Include="webserver.cpp" />
   </ItemGroup>
@@ -92,7 +92,7 @@
     <ClInclude Include="HTTP_Conn.h" />
     <ClInclude Include="locker.h" />
     <ClInclude Include="log.h" />
-    <ClInclude Include="SQL_Conn_Pool.h" />
+    <ClInclude Include="SQL_connectionPool.h" />
     <ClInclude Include="webserver.h" />
   </ItemGroup>
   <ItemGroup>
