@@ -19,31 +19,41 @@ private:
 	long long m_count;					//日志行数记录
 	int m_today;						//当天时间
 	FILE* m_fp;							//文件指针
-	char* m_buf;
+	char* m_buf;						//要输出的内容
 	block_queue<string>* m_log_queue;	//阻塞队列
 	bool m_is_async;					//同步标志位
 	locker m_mutex;						//锁
 	int m_close_log;					//关闭日志
 
 public:
+	//在C++11以后，使用局部变量懒汉不用加锁
 	static Log* get_instance()
 	{
 		static Log instance;
 		return &instance;
 	}
+	/*
+	* file_name:日志文件
+	* log_buf_size:日志缓冲区大小
+	* split_lines:最长日志条队列
+	*/
+	bool init(const char* file_name, int close_log, int log_buf_size = 8192, int split_lines = 5000000, int max_queue_size = 0);
 
+	//异步写日志公有方法，调用私有方法async_write_log
 	static void* flush_log_thread(void* args)
 	{
 		Log::get_instance()->async_write_log();
 	}
 	
-	bool init(const char* file_name, int close_log, int log_buf_size = 8192, int split_lines = 5000000, int max_queue_size = 0);
+	//整理输出格式
 	void write_log(int level,const char *format,...);
+	//刷新缓冲区
 	void flush(void);
 
 private:
 	Log();
 	virtual ~Log();
+	//异步写日志方法
 	void* async_write_log()
 	{
 		string single_log;
@@ -57,6 +67,7 @@ private:
 	}
 };
 
+//宏定义代码，主要用户不同类型的日志输出。
 #define LOG_DEBUG(format,...)		\
 	if (0 == m_close_log)			\
 	{								\
