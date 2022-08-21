@@ -21,6 +21,9 @@
     <ClCompile Include="Thread_Pool.cpp">
       <Filter>threadpool</Filter>
     </ClCompile>
+    <ClCompile Include="lst_timer.cpp">
+      <Filter>timer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="threadpool">
@@ -41,6 +44,9 @@
     <Filter Include="server">
       <UniqueIdentifier>{6121c04b-6e83-42b1-ae43-e11803a59990}</UniqueIdentifier>
     </Filter>
+    <Filter Include="timer">
+      <UniqueIdentifier>{4a31b259-e886-4643-a00e-6236d43dce28}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="locker.h">
@@ -58,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="SQL_connectionPool.h">
       <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="lst_timer.h">
+      <Filter>timer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

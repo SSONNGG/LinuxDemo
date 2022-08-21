@@ -29,13 +29,14 @@ connection_pool::~connection_pool()
 //初始化
 void connection_pool::init(string url, string user, string password, string database, int port, int maxConn, int closeLog)
 {
+	//初始化数据库信息
 	m_Url = url;
 	m_User = user;
 	m_Password = password;
 	m_Database = database;
 	m_Port = port;
 	m_close_log = closeLog;
-
+	//创建maxConn条数据库连接
 	for (int i = 0; i < maxConn; i++)
 	{
 		MYSQL* con = NULL;
@@ -53,10 +54,11 @@ void connection_pool::init(string url, string user, string password, string data
 			LOG_ERROR("MYSQL ERROR");
 			exit(1);
 		}
+		//更新数据库连接池和空闲连接数
 		connList.push_back(con);
 		++m_FreeConn;
 	}
-
+	//将信号量初始化为最大连接次数
 	reserve = sem(m_FreeConn);
 	m_MaxConn = m_FreeConn;
 }
@@ -70,6 +72,7 @@ MYSQL* connection_pool::GetConnection()
 	{
 		return NULL;
 	}
+	//取出连接，信号量原子-1，如果信号量原子为0，则阻塞等待
 	reserve.wait();
 
 	lock.lock();
@@ -82,7 +85,6 @@ MYSQL* connection_pool::GetConnection()
 
 	lock.unlock();
 	return conn;
-	return nullptr;
 }
 
 //释放当前使用的连接
@@ -100,7 +102,7 @@ bool connection_pool::ReleaseConnection(MYSQL* conn)
 	--m_CurConn;
 
 	lock.unlock();
-
+	//释放后信号量原子+1
 	reserve.post();
 	return true;
 }
@@ -111,6 +113,7 @@ void connection_pool::DestoryPool()
 	lock.lock();
 	if (connList.size() > 0)
 	{
+		//使用迭代器遍历，关闭数据库连接
 		list<MYSQL*>::iterator it;
 		for (it = connList.begin(); it != connList.end(); ++it)
 		{
@@ -119,6 +122,7 @@ void connection_pool::DestoryPool()
 		}
 		m_CurConn = 0;
 		m_FreeConn = 0;
+		//清空List
 		connList.clear();
 	}
 	lock.unlock();

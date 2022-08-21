@@ -51,6 +51,7 @@ private:
 	MYSQL* conRAII;
 	connection_pool* poolRAII;
 public:
+	//双指针对MYSQL *conRAII进行修改
 	connection_pool_RAII(MYSQL** con, connection_pool* coonPool);
 	~connection_pool_RAII();
 };
