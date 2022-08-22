@@ -19,7 +19,7 @@ class util_timer
 public:
 	util_timer() : prev(NULL), next(NULL) {}
 
-private:
+public:
 	time_t expire;
 
 	void(*cb_func)(client_data*);
@@ -59,16 +59,16 @@ public:
 	//将内核事件表注册读事件，ET模式，选择开启EPOLLONESHOT
 	void addfd(int epollfd, int fd, bool one_shot, int TRIGMode);
 	//信号处理函数
-	static void sig_handler(int sig);
+	static void signal_handler(int sig);
 	//设置信号函数
-	void addsig(int sig, void(handler)(int), bool restart = true);
+	void addsignal(int sig, void(handler)(int), bool restart = true);
 	//定时处理任务，重新定时用来不断触发SIGALRM信号
 	void timer_handler();
 
 	void show_error(int connfd, const char* info);
 
 public:
-	static int& u_pipefd;
+	static int* u_pipefd;
 	sort_timer_lst m_timer_lst;
 	static int u_epollfd;
 	int m_TIMESLOT;
