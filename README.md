@@ -1,7 +1,7 @@
 # LinuxDemo
 用于个人学习Linux下C/C++程序开发仓库
 
-# Day 01 自定义block_queue的实现
+# Day 01 自定义 block_queue 的实现
 自定义`block_queue`主要采用循环数组来实现，其中内部成员定义如下：
 ```CPP
 private:
@@ -228,3 +228,62 @@ connection_pool_RAII::~connection_pool_RAII()
 	poolRAII->ReleaseConnection(conRAII);
 }
 ```
+
+# Day 03 定时器
+## 基础定义
++ **非活跃**：客户端与服务器建立连接后，长时间不交换数据，一直占用服务器端的文件描述符，导致资源浪费。
++ **定时事件**：指固定一段时间后，自动触发某段代码，由该段代码处理一个事件。
++ **定时器**：指利用结构体或者其他形式，将多种定时事件封装起来。
++ **定时器容器**：指使用某种容器类数据结构，将上述多个定时器组合起来，便于对定时事件统一管理。
+
+## 具体使用
+在服务器主循环，为每一个连接创建一个定时器，并对每个连接进行定时。
+
+同时利用升序时间链表容器，串联所有定时器，若主循环接收到定时通知，则在链表中依次执行定时任务。
+
+> Linux 下提供的三种定时方法：
++ socket 选项 `SO_RECVTIMEO` 和 `SO_SNDTIMEO`
++ `SIGALRM` 信号
++ I/O 复用系统调用的超时参数
+在 Demo 中，采用 `SIGALRM` 信号的形式定时：
+```CPP
+//定时器链表：一个升序的双向链表，且带有头结点和尾结点
+class sort_timer_lst
+{
+public:
+	sort_timer_lst();
+	~sort_timer_lst();
+
+	void add_timer(util_timer* timer);
+	void adjust_timer(util_timer* timer);
+	void del_timer(util_timer* timer);
+	void tick();
+
+private:
+	void add_timer(util_timer* timer, util_timer* lst_head);
+
+	util_timer* head;
+	util_timer* tail;
+
+};
+```
+
+## 使用的 API
+### `sigaction` 结构体
+```CPP
+struct sigaction
+  {
+	void (*sa_handler)(int); //sa_handler函数指针，指向信号处理函数 
+    void (*sa_sigaction)(int, siginfo_t *, void *);  
+    sigset_t sa_mask;  //指定在信号处理函数执行期间需要被屏蔽的信号
+    int sa_flags;  //指定信号处理的行为
+    void (*sa_restorer)(void);
+  };
+```
+`sa_flags` 的行为包括：
++ `SA_RESTART` ：使被信号打断的系统调用自动重新发起
++ `SA_NOCLDSTOP` ：使父进程在它的子进程暂停或者继续运行时不会收到 `SIGCHLD` 信号
++ `SA_NOCLDWAIT` ：使父进程在它的子进程退出时不会收到 `SIGCHLD` 信号，这时子进程如果退出也不会成为僵尸进程
++ `SA_NODEFER` ：使对信号的屏蔽无效，在信号处理函数执行期间仍然能够发出这个信号
++ `SA_RESETHAND` ：信号处理之后重新设置为默认的处理方式
++ `SA_SIGINFO` ：使用 `sa_sigaction` 成员而不是 `sa_handler` 作为信号处理函数
