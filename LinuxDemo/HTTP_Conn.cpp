@@ -201,3 +201,108 @@ http_conn::LINE_STATUS http_conn::parse_line()
 	return LINE_OPEN;
 }
 
+//循环读取用户数据，直到无数据可读或对方关闭连接
+//非阻塞ET工作模式下，需要一次性将数据读完
+bool http_conn::read_once()
+{
+	if (m_read_idx >= READ_BUFFER_SIZE)
+	{
+		return false;
+	}
+	int bytes_read = 0;
+
+	//LT读数据
+	if (0 == m_TRIGMODE)
+	{
+		bytes_read = recv(m_sockfd, m_read_buf + m_read_idx, READ_BUFFER_SIZE - m_read_idx, 0);
+		m_read_idx += bytes_read;
+
+		if (bytes_read <= 0)
+		{
+			return false;
+		}
+		return true;
+	}
+	else //ET读数据
+	{
+		while (true)
+		{
+			bytes_read = recv(m_sockfd, m_read_buf + m_read_idx, READ_BUFFER_SIZE - m_read_idx, 0);
+			if (bytes_read == -1)
+			{
+				if (errno == EAGAIN || errno == EWOULDBLOCK)
+				{
+					break;
+				}
+				return false;
+			}
+			else if (bytes_read == 0)
+			{
+				return false;
+			}
+			m_read_idx += bytes_read;
+		}
+		return true;
+	}
+}
+
+//解析http请求行，获得请求方法，目标url以及http版本号
+http_conn::HTTP_CODE http_conn::parse_request_line(char* text)
+{
+	m_url = strpbrk(text, " \t");
+	if (!m_url)
+	{
+		return BAD_REQUEST;
+	}
+	*m_url++ = '\0';
+	char* method = text;
+	if (strcasecmp(method, "GET") == 0)
+	{
+		m_method == GET;
+	}
+	else if(strcasecmp(method,"POST")==0)
+	{
+		m_method = POST;
+		cgi = 1;
+	}
+	else
+	{
+		return BAD_REQUEST;
+	}
+	m_url += strspn(m_url, " \t");
+	m_version = strpbrk(m_url, " \t");
+	
+	if (!m_version)
+	{
+		return BAD_REQUEST;
+	}
+	*m_version++ = '\0';
+	m_version += strspn(m_version, " \t");
+	if (strcasecmp(m_version, "HTTP/1.1") != 0)
+	{
+		return BAD_REQUEST;
+	}
+	if (strncasecmp(m_url, "http://", 7) == 0)
+	{
+		m_url += 7;
+		m_url = strchr(m_url, '/');
+	}
+
+	if (strncasecmp(m_url, "https://", 8) == 0)
+	{
+		m_url += 8;
+		m_url = strchr(m_url, '/');
+	}
+
+	if (!m_url || m_url[0] != '/')
+	{
+		return BAD_REQUEST;
+	}
+	//当url显示为/时，显示判断界面
+	if (strlen(m_url) == 1)
+	{
+		strcat(m_url, "judge.html");
+	}
+	m_check_state = CHECK_STATE_HEADER;
+	return NO_REQUEST;
+}
