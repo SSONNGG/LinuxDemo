@@ -101,4 +101,103 @@ void modfd(int epollfd, int fd, int ev, int TRIGMode)
 int http_conn::m_user_count = 0;
 int http_conn::m_epollfd = -1;
 
+//关闭一个连接，用户总量-1
+void http_conn::close_conn(bool real_close)
+{
+	if (real_close && (m_sockfd != -1))
+	{
+		cout << "close " << m_sockfd << endl;
+		removefd(m_epollfd, m_sockfd);
+		m_sockfd = -1;
+		m_user_count--;
+	}
+}
+
+//初始化连接，外部调用初始化套接字
+void http_conn::init(int sockfd, const sockaddr_in& addr, char* root, int TRIGMode, int close_log, string user, string password, string database)
+{
+	m_sockfd = sockfd;
+	m_address = addr;
+
+	addfd(m_epollfd, sockfd, true, m_TRIGMODE);
+	m_user_count++;
+
+	//当浏览器出现连接重置时，可能问题如下：
+	//1.网站根目录出错
+	//2.http响应格式出错
+	//3.访问的文件中内容完全为空
+	doc_root = root;
+	m_TRIGMODE = TRIGMode;
+	m_close_log = close_log;
+
+	strcpy(sql_user, user.c_str());
+	strcpy(sql_password, password.c_str());
+	strcpy(sql_database, database.c_str());
+
+	init();
+}
+
+//初始化新接受的连接
+//check_state 默认为分析请求行状态
+void http_conn::init()
+{
+	mysql = NULL;
+	bytes_to_send = 0;
+	bytes_have_send = 0;
+	m_check_state = CHECK_STATE_REQUESTLINE;
+	m_linger = false;
+	m_method = GET;
+	m_url = 0;
+	m_version = 0;
+	m_content_length = 0;
+	m_host = 0;
+	m_start_line = 0;
+	m_checked_idx = 0;
+	m_read_idx = 0;
+	m_write_idx = 0;
+	cgi = 0;
+	m_state = 0;
+	timer_flag = 0;
+	improv = 0;
+
+	memset(m_read_buf, '\0', READ_BUFFER_SIZE);
+	memset(m_write_buf, '\0', WRITE_BUFFER_SIZE);
+	memset(m_real_file, '\0', FILENAME_LEN);
+}
+
+//从状态机，用于分析出一行内容
+//返回值为行的读取状态，有LINE_OK,LINE_BAD,LINE_OPEN
+http_conn::LINE_STATUS http_conn::parse_line()
+{
+	char temp;
+	for (; m_checked_idx < m_read_idx; ++m_checked_idx)
+	{
+		temp = m_read_buf[m_checked_idx];
+		if (temp == '\r')
+		{
+			if ((m_checked_idx + 1) == m_read_idx)
+			{
+				return LINE_OPEN;
+			}
+			else if (m_read_buf[m_checked_idx+1]=='\n')
+			{
+				m_read_buf[m_checked_idx++] = '\0';
+				m_read_buf[m_checked_idx++] = '\0';
+				return LINE_OK;
+			}
+			return LINE_BAD;
+		}
+		else if (temp=='\n')
+		{
+			if (m_checked_idx > 1 && m_read_buf[m_checked_idx - 1] == '\r')
+			{
+				m_read_buf[m_checked_idx - 1] = '\0';
+				m_read_buf[m_checked_idx++] = '\0';
+				return LINE_OK;
+			}
+			return LINE_BAD;
+		}
+	}
+	return LINE_OPEN;
+}
 

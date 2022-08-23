@@ -68,9 +68,9 @@ public:
 	};
 	enum LINE_STATUS
 	{
-		HTTP_OK = 0,
-		HTTP_BAD,
-		HTTP_OPEN
+		LINE_OK = 0,
+		LINE_BAD,
+		LINE_OPEN
 	};
 
 public:
