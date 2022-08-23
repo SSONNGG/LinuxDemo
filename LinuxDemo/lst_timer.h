@@ -28,6 +28,7 @@ public:
 	util_timer* next;
 };
 
+//定时器链表：一个升序的双向链表，且带有头结点和尾结点
 class sort_timer_lst
 {
 public:
