@@ -90,16 +90,6 @@ public:
 	void initmysql_result(connection_pool* connPool);
 	int timer_flag;
 	int improv;
-	LINE_STATUS parse_line();
-	void unmap();
-	bool add_response(const char* format, ...);
-	bool add_content(const char* content);
-	bool add_status_line(int status, const char* title);
-	bool add_headers(int content_length);
-	bool add_content_type();
-	bool add_content_length(int content_length);
-	bool add_linger();
-	bool add_blank_line();
 
 public:
 	static int m_epollfd;
@@ -116,6 +106,16 @@ private:
 	HTTP_CODE parse_content(char* text);
 	HTTP_CODE do_request();
 	char* get_line() { return m_read_buf + m_start_line; };
+	LINE_STATUS parse_line();
+	void unmap();
+	bool add_response(const char* format, ...);
+	bool add_content(const char* content);
+	bool add_status_line(int status, const char* title);
+	bool add_headers(int content_length);
+	bool add_content_type();
+	bool add_content_length(int content_length);
+	bool add_linger();
+	bool add_blank_line();
 
 private:
 	int m_sockfd;

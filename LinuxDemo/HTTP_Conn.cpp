@@ -164,6 +164,58 @@ void http_conn::init()
 	memset(m_real_file, '\0', FILENAME_LEN);
 }
 
+http_conn::HTTP_CODE http_conn::process_read()
+{
+	LINE_STATUS line_status = LINE_OK;
+	HTTP_CODE ret = NO_REQUEST;
+	char* text = 0;
+
+	while ((m_check_state==CHECK_STATE_CONTENT && line_status ==LINE_OK)|| ((line_status=parse_line())==LINE_OK))
+	{
+		text = get_line();
+		m_start_line = m_checked_idx;
+		LOG_INFO("%s", text);
+		switch (m_check_state)
+		{
+		case http_conn::CHECK_STATE_REQUESTLINE:
+		{
+			ret = parse_request_line(text);
+			if (ret == BAD_REQUEST) 
+			{
+				return BAD_REQUEST;
+			}
+			break;
+		}
+		case http_conn::CHECK_STATE_HEADER:
+		{
+			ret = parse_headers(text);
+			if (ret == BAD_REQUEST)
+			{
+				return BAD_REQUEST;
+			}
+			else if (ret == GET_REQUEST)
+			{
+				return do_request();
+			}
+			break;
+		}
+		case http_conn::CHECK_STATE_CONTENT:
+		{
+			ret = parse_content(text);
+			if (ret == GET_REQUEST)
+			{
+				return do_request();
+			}
+			line_status = LINE_OPEN;
+			break;
+		}
+		default:
+			return INTERNAL_ERROR;
+		}
+	}
+	return NO_REQUEST;
+}
+
 //从状态机，用于分析出一行内容
 //返回值为行的读取状态，有LINE_OK,LINE_BAD,LINE_OPEN
 http_conn::LINE_STATUS http_conn::parse_line()
