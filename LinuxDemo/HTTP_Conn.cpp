@@ -748,6 +748,7 @@ bool http_conn::process_write(HTTP_CODE ret)
 	return true;
 }
 
+//用于处理服务器请求和任务调用的函数，各子线程通过该函数对任务进行调度
 void http_conn::process()
 {
 	HTTP_CODE read_ret = process_read();
