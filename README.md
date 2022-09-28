@@ -1,6 +1,16 @@
 # LinuxDemo
 用于个人学习Linux下C/C++程序开发仓库
 
+# Tips
+在使用SSH连接Linux远程主机或虚拟机之后，需要做如下设置，确保Visual Studio能正确加载Linux主机中的所有库文件：
+
+在**项目名称右键->属性->VC++目录->常规->包含目录**下，添加Linux主机的库目录绝对路径，如：`usr/lib`
+
+在**属性->C/C++->常规->附加包含目录**下，添加`${StlIncludeDirectories}`
+在**属性->链接器->常规->附加库目录**下，添加`%(AdditionalLibraryDirectories)`
+
+
+
 # Day 01 自定义 block_queue 的实现
 自定义`block_queue`主要采用循环数组来实现，其中内部成员定义如下：
 ```CPP
