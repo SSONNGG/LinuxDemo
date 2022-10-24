@@ -9,7 +9,10 @@
 在**属性->C/C++->常规->附加包含目录**下，添加`${StlIncludeDirectories}`
 在**属性->链接器->常规->附加库目录**下，添加`%(AdditionalLibraryDirectories)`
 
-
+如果找不到<mysql/mysql.h>包文件，请在Linux虚拟机下执行：
+```Shell
+sudo apt-get install libmysqlclient-dev
+```
 
 # Day 01 自定义 block_queue 的实现
 自定义`block_queue`主要采用循环数组来实现，其中内部成员定义如下：
