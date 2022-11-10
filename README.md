@@ -300,3 +300,5 @@ struct sigaction
 + `SA_NODEFER` ：使对信号的屏蔽无效，在信号处理函数执行期间仍然能够发出这个信号
 + `SA_RESETHAND` ：信号处理之后重新设置为默认的处理方式
 + `SA_SIGINFO` ：使用 `sa_sigaction` 成员而不是 `sa_handler` 作为信号处理函数
+
+
